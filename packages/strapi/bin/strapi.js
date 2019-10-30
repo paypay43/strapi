@@ -119,6 +119,8 @@ program
 // `$ strapi generate:api`
 program
   .command('generate:api <id> [attributes...]')
+  .option('-a, --api <api>', 'API name to generate a sub API')
+  .option('-p, --plugin <api>', 'plugin name')
   .option('-c, --connection <connection>', 'The name of the connection to use')
   .description('generate a basic API')
   .action((id, attributes, cliArguments) => {

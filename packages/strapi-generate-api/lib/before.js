@@ -28,6 +28,9 @@ module.exports = (scope, cb) => {
     return cb.invalid('Usage: `$ strapi generate:api apiName`');
   }
 
+  // Check `api` and `plugin` parameters
+  const parent = scope.args.api || scope.args.plugin;
+
   // Format `id`.
   const name = toSlug(scope.id);
   const environment = process.env.NODE_ENV || 'development';
@@ -35,28 +38,22 @@ module.exports = (scope, cb) => {
   // `scope.args` are the raw command line arguments.
   _.defaults(scope, {
     idPluralized: pluralize(name),
-  });
-
-  // Determine default values based on the available scope.
-  _.defaults(scope, {
-    ext: '.js',
+    parentId: _.isEmpty(parent) ? undefined : _.trim(_.deburr(parent)),
+    globalID: name,
   });
 
   // Take another pass to take advantage of the defaults absorbed in previous passes.
   _.defaults(scope, {
-    filename: `${name}${scope.ext}`,
+    filename: `${name}.js`,
     filenameSettings: `${name}.settings.json`,
-    folderPrefix: !scope.args.api && scope.args.plugin ? 'plugins' : 'api',
-    folderName: name,
+    folderPrefix: !scope.args.api && scope.args.plugin ? 'extensions' : 'api',
+    folderName: scope.parentId || name,
   });
 
   // Humanize output.
   _.defaults(scope, {
     humanizeId: _.camelCase(scope.id).toLowerCase(),
-    humanizeIdPluralized: pluralize.plural(_.camelCase(scope.id).toLowerCase()),
-    humanizedPath: `\`./${scope.folderPrefix}/${
-      scope.parentId ? '' + scope.folderName : ''
-    }\``,
+    humanizedPath: `./${scope.folderPrefix}/${scope.folderName}`,
   });
 
   // Validate optional attribute arguments.
@@ -118,7 +115,7 @@ module.exports = (scope, cb) => {
   // Set collectionName
   scope.collectionName = _.has(scope.args, 'collectionName')
     ? scope.args.collectionName
-    : '';
+    : pluralize(name);
 
   // Set description
   scope.description = _.has(scope.args, 'description')
