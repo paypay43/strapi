@@ -37,9 +37,9 @@ module.exports = (scope, cb) => {
 
   // `scope.args` are the raw command line arguments.
   _.defaults(scope, {
-    idPluralized: pluralize(name),
+    name,
+    route: pluralize(name),
     parentId: _.isEmpty(parent) ? undefined : _.trim(_.deburr(parent)),
-    globalID: name,
   });
 
   // Take another pass to take advantage of the defaults absorbed in previous passes.
@@ -52,7 +52,7 @@ module.exports = (scope, cb) => {
 
   // Humanize output.
   _.defaults(scope, {
-    humanizeId: _.camelCase(scope.id).toLowerCase(),
+    humanizeId: scope.name,
     humanizedPath: `./${scope.folderPrefix}/${scope.folderName}`,
   });
 
@@ -147,7 +147,7 @@ module.exports = (scope, cb) => {
       connection: scope.connection,
       collectionName: scope.collectionName,
       info: {
-        name: scope.args.name || scope.id,
+        name: scope.args.displayName || scope.id,
         description: scope.description,
       },
       options: {
