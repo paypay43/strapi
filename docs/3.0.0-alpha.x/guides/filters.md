@@ -195,6 +195,6 @@ returns a query with the following functions
 
 - `count` => Returns an integer equal to the number of matching entities
 - `lean` => Returns the matching elements as Objects
-- `then(onSucces, onFailure)` => Calls the onSucces with an array of Mongoose objects.
+- `then(onSucces, onFailure)` => Calls the onSuccess with an array of Mongoose objects.
 - `catch(onError)` => Promise catch
 - `group(options)` => Calls the aggregation group function of mongoose
